@@ -1,0 +1,27 @@
+{
+  "name": "inventrex",
+  "version": "1.0.0",
+  "description": "InvenTrex Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InvenTrex/InvenTrex.git"
+  },
+  "keywords": [
+    "inventory",
+    "inventory",
+    "management"
+  ],
+  "author": "Jonas W",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/InvenTrex/InvenTrex/issues"
+  },
+  "homepage": "https://github.com/InvenTrex/InvenTrex#readme",
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}
