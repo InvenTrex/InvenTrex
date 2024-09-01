@@ -1,0 +1,41 @@
+name: CI Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }}
+        token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token to handle permissions
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'  # Specify the Node.js version you are using
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build project
+      run: npm run build
+
+    - name: Lint code with auto-fix
+      run: |
+        npx prettier --write "**/*.ts"  # Run Prettier directly for fixing
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add .
+        git commit -m "Fix linter issues" || echo "No changes to commit"
+        git push
+
+    - name: Run lint again to confirm fixes
+      run: npm run lint
