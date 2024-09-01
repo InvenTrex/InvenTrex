@@ -1,0 +1,38 @@
+name: Sync Main to Develop
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  sync-branches:
+    if: ${{ github.event.pull_request.merged == true }}  # Only run if the PR was merged
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Fetch all branches
+        run: git fetch --all
+
+      - name: Check if 'develop' is behind 'main'
+        id: check_branch
+        run: |
+          MAIN_SHA=$(git rev-parse origin/main)
+          DEVELOP_SHA=$(git rev-parse origin/develop)
+          echo "main_sha=${MAIN_SHA}" >> $GITHUB_ENV
+          echo "develop_sha=${DEVELOP_SHA}" >> $GITHUB_ENV
+
+      - name: Create PR from main to develop if needed
+        if: ${{ env.main_sha != env.develop_sha }}
+        run: |
+          gh pr create --head main --base develop --title "Sync main to develop" --body "Automated PR to sync changes from main to develop"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
