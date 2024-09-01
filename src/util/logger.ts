@@ -10,11 +10,15 @@ export class Logger {
 
     private static getFileName(): string {
         if (process.env.DEVELOPMENT === '1') {
-            const stack = new Error().stack;
+            const err = new Error();
+            const stack = err.stack;
+            
             if (stack) {
-                const match = stack.match(/at\s+(.*):(\d+):(\d+)/);
-                if (match) {
-                    const filePath = match[1];
+                const stackLines = stack.split('\n');
+                const callerLine = stackLines[4] || '';
+                const filePathMatch = callerLine.match(/\(([^)]+)\)/);
+                if (filePathMatch) {
+                    const filePath = filePathMatch[1];
                     return path.basename(filePath);
                 }
             }
