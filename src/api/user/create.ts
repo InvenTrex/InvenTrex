@@ -11,6 +11,4 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
 
 async function safe(req: Request, res: Response) {}
 
-export {
-    router
-};
+export { router };

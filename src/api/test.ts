@@ -10,10 +10,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 async function safe(req: Request, res: Response) {
-    res.status(200).send("Hello World");
+	res.status(200).send('Hello World');
 }
 
-
-export {
-    router
-};
+export { router };

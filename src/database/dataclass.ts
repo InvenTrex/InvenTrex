@@ -10,12 +10,7 @@ export class Database {
 	private password: string;
 	private database: string;
 
-	constructor(
-		host: string,
-		user: string,
-		password: string,
-		database: string,
-	) {
+	constructor(host: string, user: string, password: string, database: string) {
 		this.host = host;
 		this.user = user;
 		this.password = password;
@@ -23,10 +18,7 @@ export class Database {
 	}
 
 	private async createDatabase() {
-		Logger.info(
-			'Database',
-			'Database does not exist. Creating database...',
-		);
+		Logger.info('Database', 'Database does not exist. Creating database...');
 		const tempConnection = await mysql.createConnection({
 			host: this.host,
 			user: this.user,
@@ -34,15 +26,10 @@ export class Database {
 		});
 
 		try {
-			await tempConnection.query(
-				`CREATE DATABASE IF NOT EXISTS \`${this.database}\``,
-			);
+			await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${this.database}\``);
 			Logger.info('Database', 'Database created successfully.');
 		} catch (error) {
-			Logger.severe(
-				'Database',
-				'Error creating database: ' + error.message,
-			);
+			Logger.severe('Database', 'Error creating database: ' + error.message);
 			throw error;
 		} finally {
 			await tempConnection.end();

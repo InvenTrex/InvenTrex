@@ -39,20 +39,17 @@ async function init() {
 
 		const key = fs.readFileSync(keyPath, 'utf8');
 		const cert = fs.readFileSync(certPath, 'utf8');
-		const credentials = { key, cert };
+		const credentials = {
+			key,
+			cert,
+		};
 
 		https.createServer(credentials, app).listen(port, () => {
-			Logger.info(
-				'HTTPS',
-				`Server is running on https://localhost:${port}`,
-			);
+			Logger.info('HTTPS', `Server is running on https://localhost:${port}`);
 		});
 	} else {
 		http.createServer(app).listen(port, () => {
-			Logger.info(
-				'HTTP',
-				`Server is running on http://localhost:${port}`,
-			);
+			Logger.info('HTTP', `Server is running on http://localhost:${port}`);
 		});
 	}
 }

@@ -7,7 +7,9 @@ export async function registerEndpoints(app: Express) {
 	const apiDir = path.resolve(__dirname, '../api');
 
 	async function scanDir(dir: string) {
-		const entries = await fs.readdir(dir, { withFileTypes: true });
+		const entries = await fs.readdir(dir, {
+			withFileTypes: true,
+		});
 
 		for (const entry of entries) {
 			const fullPath = path.join(dir, entry.name);
@@ -16,25 +18,24 @@ export async function registerEndpoints(app: Express) {
 				await scanDir(fullPath);
 			} else if (entry.isFile() && entry.name.endsWith('.js')) {
 				const relativePath = path.relative(apiDir, fullPath);
-				const routePath =
-					'/' + relativePath.replace(/\.js$/, '').replace(/\\/g, '/');
+				const routePath = '/' + relativePath.replace(/\.js$/, '').replace(/\\/g, '/');
 
-                    try {
-                        const routerModule = await import(fullPath);
-                        Logger.info('Router', `Loaded module: ${fullPath}`);
-                        Logger.info('Router', routerModule);  // Log the module exports
-                        
-                        const router: Router = routerModule.router;
-    
-                        if (!router) {
-                            Logger.severe('Router', `No router found in module at path: ${fullPath}`);
-                            continue;
-                        }
-    
-                        app.use(routePath, router);
-                    } catch (err) {
-                        Logger.severe('Router', `Failed to load module at path: ${fullPath}`);
-                    }
+				try {
+					const routerModule = await import(fullPath);
+					Logger.info('Router', `Loaded module: ${fullPath}`);
+					Logger.info('Router', routerModule); // Log the module exports
+
+					const router: Router = routerModule.router;
+
+					if (!router) {
+						Logger.severe('Router', `No router found in module at path: ${fullPath}`);
+						continue;
+					}
+
+					app.use(routePath, router);
+				} catch (err) {
+					Logger.severe('Router', `Failed to load module at path: ${fullPath}`);
+				}
 			}
 		}
 	}
