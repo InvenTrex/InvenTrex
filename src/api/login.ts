@@ -1,9 +1,18 @@
-import { Request, Response } from 'express';
-import { getConnection } from '../../database/database';
+import { Request, Response, Router } from 'express';
+import { getConnection } from '../database/database';
 import bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { Logger } from '../util/logger';
 
-export async function execute(req: Request, res: Response) {
+const router = Router();
+
+router.post('/', async (req: Request, res: Response) => {
+	await safe(req, res).catch((error) => {
+		Logger.severe('API - Login', error);
+	});
+});
+
+async function safe(req: Request, res: Response) {
 	if (!req.body) {
 		return res.status(400).json({ error: 'Invalid request body' });
 	}
@@ -80,3 +89,7 @@ export async function execute(req: Request, res: Response) {
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 }
+
+export {
+    router
+};

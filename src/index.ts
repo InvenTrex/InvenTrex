@@ -6,7 +6,7 @@ import https from 'https';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
-import { registerEndpoints } from './api';
+import { registerEndpoints } from './handlers/endpointHandler';
 
 const app = express();
 
