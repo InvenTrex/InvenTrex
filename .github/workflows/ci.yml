@@ -11,11 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout source branch
       uses: actions/checkout@v3
       with:
-        ref: ${{ github.head_ref }}
-        token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token to handle permissions
+        ref: ${{ github.head_ref }}  # Checkout the PR source branch
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -35,7 +34,11 @@ jobs:
         git config user.email "github-actions@github.com"
         git add .
         git commit -m "Fix linter issues" || echo "No changes to commit"
-        git push
+    - name: Push changes to PR source branch
+      run: |
+        git push origin HEAD:${{ github.head_ref }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Run lint again to confirm fixes
       run: npm run lint
