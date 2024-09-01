@@ -17,7 +17,7 @@ async function preInit() {
 }
 
 async function init() {
-	await preInit()
+	await preInit();
 	await db.connectDB();
 
 	await registerEndpoints(app);
